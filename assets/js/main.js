@@ -326,10 +326,20 @@
           orientation: 'landscape'
         }
       ],
-
+      // Apply good, warning, and poor colors to Time, GW RSSI, and GW SNR data
       "createdRow": function(row, data, dataIndex) {
+        var now = moment();
+        var anchorTime = moment($('td:eq(4)', row).text());
+        var diffInMilliseconds = now.diff(anchorTime);
         var rssi = $('td:eq(8)', row).text();
         var snr = $('td:eq(9)', row).text();
+        if (anchorTime !== '') {
+          if (diffInMilliseconds > 2 * 60 * 60 * 1000) {
+            $('td:eq(4)', row).addClass('poor');
+          } else if (diffInMilliseconds > 1 * 60 * 60 * 1000) {
+            $('td:eq(4)', row).addClass('warning');
+          }
+        }
         if (rssi !== '') {
           rssi = parseFloat(rssi);
           if (rssi >= -105) {
