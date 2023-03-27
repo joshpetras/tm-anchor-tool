@@ -245,7 +245,8 @@
         },
         {
           "title": "Time",
-          "targets": 4
+          "targets": 4,
+          "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
         },
         {
           "title": "Battery",
