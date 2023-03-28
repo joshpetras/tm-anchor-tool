@@ -192,21 +192,32 @@
             if (!missedFramesData[anchorId]) {
               missedFramesData[anchorId] = {
                 lastTimeStamp: timeStamp,
-                totalMissedFrames: 0
+                totalMissedFrames: 0,
+                totalFrames: 0
               };
             }
 
             // Calculate missed frames for this row
             var missedFrames = (frameCount !== null && previousFrameCount !== null) ? frameCount - previousFrameCount - 1 : 0;
 
-            // If the timestamp has changed, update the total missed frames for this anchor ID
+            // If the timestamp has changed, update the total missed frames and total frames for this anchor ID
             if (missedFramesData[anchorId].lastTimeStamp !== timeStamp) {
               missedFramesData[anchorId].totalMissedFrames += missedFrames;
               missedFramesData[anchorId].lastTimeStamp = timeStamp;
+
+              // Update the total frames for this anchor ID
+              if (previousFrameCount !== null) {
+                missedFramesData[anchorId].totalFrames += frameCount - previousFrameCount;
+              }
             }
 
-            // Return the total missed frames for this anchor ID
-            return missedFramesData[anchorId].totalMissedFrames;
+            // Calculate and return the percentage of missed frames for this anchor ID, if totalFrames is greater than zero
+            if (missedFramesData[anchorId].totalFrames > 0) {
+              var percentageMissedFrames = (missedFramesData[anchorId].totalMissedFrames / missedFramesData[anchorId].totalFrames) * 100;
+              return percentageMissedFrames.toFixed(1) + '%';
+            } else {
+              return '0.0%';
+            }
           }
         },
         {
