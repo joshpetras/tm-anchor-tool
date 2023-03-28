@@ -11,13 +11,14 @@
     // var apiEndpoint = "https://prd.tcs31.sostark.nl/api/anchors";
 
     // Get the current date and time when the query is initiated
-    var initialDate = new Date();
-    var dateString = moment(initialDate).format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to format the date string
+    var dateString = moment().format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to create the date string
 
     // Add event listener to reset button
     $('#reset-btn').on('click', function() {
       missedFramesData = {}; // Reset missed frames data
       $('#sensor-data').DataTable().ajax.reload(null, false); // Reload table data without resetting searchbuilder filters
+      dateString = moment().format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to update the date
+      document.querySelector('h2').innerText = 'Anchor information from ' + apiEndpoint + ' - Connected since ' + dateString; // Update the page title with new timestamp for missed frames counter
     });
 
     // Define table options
