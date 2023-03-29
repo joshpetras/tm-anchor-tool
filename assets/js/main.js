@@ -343,8 +343,16 @@
         var now = moment();
         var anchorTime = moment($('td:eq(4)', row).text());
         var diffInMilliseconds = now.diff(anchorTime);
+        var batteryValue = $('td:eq(5)', row).text();
         var rssi = $('td:eq(8)', row).text();
         var snr = $('td:eq(9)', row).text();
+        if (batteryValue !== '') {
+          if (batteryValue < 3) {
+            $('td:eq(5)', row).addClass('poor');
+          } else if (batteryValue < 3.2) {
+            $('td:eq(5)', row).addClass('warning');
+          }
+        }
         if (anchorTime !== '') {
           if (diffInMilliseconds > 2 * 60 * 60 * 1000) {
             $('td:eq(4)', row).addClass('poor');
