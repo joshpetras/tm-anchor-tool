@@ -202,7 +202,7 @@
             var missedFrames = (frameCount !== null && previousFrameCount !== null) ? frameCount - previousFrameCount - 1 : 0;
 
             // If the timestamp has changed, update the total missed frames and total frames for this anchor ID
-            if (missedFramesData[anchorId].lastTimeStamp !== timeStamp) {
+            if (missedFramesData[anchorId].lastTimeStamp !== timeStamp && missedFrames >= 0) {
               missedFramesData[anchorId].totalMissedFrames += missedFrames;
               missedFramesData[anchorId].lastTimeStamp = timeStamp;
 
