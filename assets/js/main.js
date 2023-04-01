@@ -37,6 +37,16 @@
           "data": "tpid"
         },
         {
+          "data": "tpid",
+          "render": function(data, type, row) {
+            // Extract the hexadecimal part of the tpid
+            var hex = data.split("-")[1];
+            // Convert the hexadecimal to decimal
+            var decimal = parseInt(hex, 16);
+            return decimal;
+          }
+        },
+        {
           "data": null,
           "render": function(data, type, row) {
             // find gateway with highest rssi
@@ -241,37 +251,41 @@
         }
       ],
       "columnDefs": [{
-          "title": "Anchor",
+          "title": "Anchor (TPID)",
           "targets": 0
         },
         {
-          "title": "Gateway with max RSSI",
+          "title": "Anchor (Decimal)",
           "targets": 1
         },
         {
-          "title": "Connected Gateways",
+          "title": "Gateway with max RSSI",
           "targets": 2
         },
         {
-          "title": "Token Count",
+          "title": "Connected Gateways",
           "targets": 3
         },
         {
+          "title": "Token Count",
+          "targets": 4
+        },
+        {
           "title": "Time",
-          "targets": 4,
+          "targets": 5,
           "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
         },
         {
           "title": "Battery",
-          "targets": 5
-        },
-        {
-          "title": "Temp (Anchor)",
           "targets": 6
         },
         {
-          "title": "Temp (Environment)",
+          "title": "Temp (Anchor)",
           "targets": 7
+        },
+        {
+          "title": "Temp (Environment)",
+          "targets": 8
         },
         /*
                  {
@@ -292,31 +306,31 @@
                  }, */
         {
           "title": "GW RSSI",
-          "targets": 8
-        },
-        {
-          "title": "GW SNR",
           "targets": 9
         },
         {
-          "title": "Frame Count",
+          "title": "GW SNR",
           "targets": 10
         },
         {
-          "title": "Missed Frames",
+          "title": "Frame Count",
           "targets": 11
         },
         {
-          "title": "SF",
+          "title": "Missed Frames",
           "targets": 12
         },
         {
-          "title": "Wake Up Code",
+          "title": "SF",
           "targets": 13
         },
         {
-          "title": "Motion Detected",
+          "title": "Wake Up Code",
           "targets": 14
+        },
+        {
+          "title": "Motion Detected",
+          "targets": 15
         }
       ],
       "lengthMenu": [
@@ -341,43 +355,43 @@
       // Apply good, warning, and poor colors to Time, GW RSSI, and GW SNR data
       "createdRow": function(row, data, dataIndex) {
         var now = moment();
-        var anchorTime = moment($('td:eq(4)', row).text());
+        var anchorTime = moment($('td:eq(5)', row).text());
         var diffInMilliseconds = now.diff(anchorTime);
-        var batteryValue = $('td:eq(5)', row).text();
-        var rssi = $('td:eq(8)', row).text();
-        var snr = $('td:eq(9)', row).text();
+        var batteryValue = $('td:eq(6)', row).text();
+        var rssi = $('td:eq(9)', row).text();
+        var snr = $('td:eq(10)', row).text();
         if (batteryValue !== '') {
           if (batteryValue < 3) {
-            $('td:eq(5)', row).addClass('poor');
+            $('td:eq(6)', row).addClass('poor');
           } else if (batteryValue < 3.2) {
-            $('td:eq(5)', row).addClass('warning');
+            $('td:eq(6)', row).addClass('warning');
           }
         }
         if (anchorTime !== '') {
           if (diffInMilliseconds > 2 * 60 * 60 * 1000) {
-            $('td:eq(4)', row).addClass('poor');
+            $('td:eq(5)', row).addClass('poor');
           } else if (diffInMilliseconds > 1 * 60 * 60 * 1000) {
-            $('td:eq(4)', row).addClass('warning');
+            $('td:eq(5)', row).addClass('warning');
           }
         }
         if (rssi !== '') {
           rssi = parseFloat(rssi);
           if (rssi >= -105) {
-            $('td:eq(8)', row).addClass('good');
+            $('td:eq(9)', row).addClass('good');
           } else if (rssi > -116) {
-            $('td:eq(8)', row).addClass('warning');
+            $('td:eq(9)', row).addClass('warning');
           } else {
-            $('td:eq(8)', row).addClass('poor');
+            $('td:eq(9)', row).addClass('poor');
           }
         }
         if (snr !== '') {
           snr = parseFloat(snr);
           if (snr >= -5) {
-            $('td:eq(9)', row).addClass('good');
+            $('td:eq(10)', row).addClass('good');
           } else if (snr >= -15) {
-            $('td:eq(9)', row).addClass('warning');
+            $('td:eq(10)', row).addClass('warning');
           } else {
-            $('td:eq(9)', row).addClass('poor');
+            $('td:eq(10)', row).addClass('poor');
           }
         }
       }
