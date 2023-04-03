@@ -49,21 +49,30 @@
           "createdCell": function(cell, cellData, rowData) {
             // Check if longitude and latitude values exist
             if (rowData.geoInfo && rowData.geoInfo.longitude && rowData.geoInfo.latitude) {
-              // Generate the Mapbox URL
-              var mapboxUrl = getMapboxUrl(rowData.geoInfo.latitude, rowData.geoInfo.longitude); //TM API has these reversed!
+              var mapboxUrl = getMapboxUrl(rowData.geoInfo.latitude, rowData.geoInfo.longitude); // TM API has these reversed!
 
               // Add a data attribute to the cell to store the Mapbox URL
               $(cell).attr('data-mapbox-url', mapboxUrl);
 
               // Initialize Tippy.js tooltip
               tippy(cell, {
-                content: '<div style="width: 100%; max-width: 640px;"><img src="' + mapboxUrl + '" alt="Map" style="width: 100%; height: auto;" /></div>',
+                content: '<div style="width: 100%; max-width: 640px;"><img data-src="' + mapboxUrl + '" alt="Map" style="width: 100%; height: auto;" /></div>',
                 maxWidth: '90vw',
                 allowHTML: true,
                 trigger: 'click',
                 placement: 'auto',
-                interactive: true,
-                arrow: true
+                interactive: false,
+                arrow: true,
+                onShow(instance) {
+                  // Set the image src when the tooltip is shown
+                  var img = instance.popper.querySelector('img');
+                  img.src = img.dataset.src;
+                },
+                onHidden(instance) {
+                  // Clear the image src when the tooltip is hidden
+                  var img = instance.popper.querySelector('img');
+                  img.src = '';
+                }
               });
             }
           }
