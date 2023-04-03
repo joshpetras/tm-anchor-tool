@@ -420,7 +420,9 @@
         'excel',
         {
           extend: 'pdf',
-          orientation: 'landscape'
+          orientation: 'landscape',
+          pageSize: 'A3',
+          download: 'open'
         }
       ],
       // Apply good, warning, and poor colors to Time, GW RSSI, and GW SNR data
