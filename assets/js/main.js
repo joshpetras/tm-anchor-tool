@@ -21,6 +21,17 @@
       document.querySelector('h2').innerText = 'Anchor information from ' + apiEndpoint + ' - Connected since ' + dateString; // Update the page title with new timestamp for missed frames counter
     });
 
+    function getMapboxUrl(longitude, latitude) {
+      var baseUrl = "https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/";
+      var marker = "pin-s+555555(" + longitude + "," + latitude + ")";
+      // var mapCenter = "/" + longitude + "," + latitude + ",15.99,0";
+      var mapCenter = "/10.427,55.3606,15.99,0"; // Specific to OUH project
+      var dimensions = "/1280x800";
+      var accessToken = "?access_token=pk.eyJ1Ijoiam9zaHBldHJhcyIsImEiOiJjbGcwemQ3Z3YwcmszM3BxMTZubmdoc2FzIn0.XeRFM2zGYI1zMP-ZO9dOFA";
+
+      return baseUrl + marker + mapCenter + dimensions + accessToken;
+    }
+
     // Define table options
     var tableOptions = {
       "ajax": {
@@ -34,7 +45,28 @@
         }
       },
       "columns": [{
-          "data": "tpid"
+          "data": "tpid",
+          "createdCell": function(cell, cellData, rowData) {
+            // Check if longitude and latitude values exist
+            if (rowData.geoInfo && rowData.geoInfo.longitude && rowData.geoInfo.latitude) {
+              // Generate the Mapbox URL
+              var mapboxUrl = getMapboxUrl(rowData.geoInfo.latitude, rowData.geoInfo.longitude); //TM API has these reversed!
+
+              // Add a data attribute to the cell to store the Mapbox URL
+              $(cell).attr('data-mapbox-url', mapboxUrl);
+
+              // Initialize Tippy.js tooltip
+              tippy(cell, {
+                content: '<div style="width: 100%; max-width: 640px;"><img src="' + mapboxUrl + '" alt="Map" style="width: 100%; height: auto;" /></div>',
+                maxWidth: '90vw',
+                allowHTML: true,
+                trigger: 'click',
+                placement: 'auto',
+                interactive: true,
+                arrow: true
+              });
+            }
+          }
         },
         {
           "data": "tpid",
@@ -47,7 +79,7 @@
           }
         },
         {
-          "data": "geoInfo.buildingid",
+          "data": "geoInfo.building",
           "render": function(data, type, row) {
             return (data) ? data : '';
           }
