@@ -22,11 +22,11 @@
     });
 
     function getMapboxUrl(longitude, latitude) {
-      var baseUrl = "https://api.mapbox.com/styles/v1/mapbox/outdoors-v11/static/";
-      var marker = "pin-s+555555(" + longitude + "," + latitude + ")";
+      var baseUrl = "https://api.mapbox.com/styles/v1/joshpetras/clg2rx9hm009o01nzrjj3iko0/static/";
+      var marker = "pin-l+ff2600(" + longitude + "," + latitude + ")";
       // var mapCenter = "/" + longitude + "," + latitude + ",15.99,0";
-      var mapCenter = "/10.427,55.3606,15.99,0"; // Specific to OUH project
-      var dimensions = "/1280x800";
+      var mapCenter = "/10.4259,55.3613,15.26,0"; // Specific to OUH project
+      var dimensions = "/640x480";
       var accessToken = "?access_token=pk.eyJ1Ijoiam9zaHBldHJhcyIsImEiOiJjbGcwemQ3Z3YwcmszM3BxMTZubmdoc2FzIn0.XeRFM2zGYI1zMP-ZO9dOFA";
 
       return baseUrl + marker + mapCenter + dimensions + accessToken;
@@ -56,12 +56,12 @@
 
               // Initialize Tippy.js tooltip
               tippy(cell, {
-                content: '<div style="width: 100%; max-width: 640px;"><img data-src="' + mapboxUrl + '" alt="Map" style="width: 100%; height: auto;" /></div>',
+                content: '<div style="width: 100%;"><img data-src="' + mapboxUrl + '" alt="Map" style="width: 100%; height: auto;" /></div>',
                 maxWidth: '90vw',
                 allowHTML: true,
                 trigger: 'click',
                 placement: 'auto',
-                interactive: false,
+                interactive: true,
                 arrow: true,
                 onShow(instance) {
                   // Set the image src when the tooltip is shown
