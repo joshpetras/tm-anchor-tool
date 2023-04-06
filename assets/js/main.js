@@ -42,6 +42,18 @@
         "beforeSend": function() {
           // Update the page title before sending the request
           document.querySelector('h2').innerText = 'Anchor information from ' + apiEndpoint + ' - Connected since ' + dateString;
+        },
+        "error": function(xhr, error, thrown) {
+          // Provide a custom error message or behavior
+          if (xhr.status === 500) {
+            // Show a custom error message for server error
+            alert('An error occurred while retrieving the data. The server may be experiencing issues. Please try again later.');
+          } else {
+            // Show a generic error message for other errors
+            alert('An error occurred while retrieving the data. Please check your internet connection and try again.');
+          }
+          // Clear the loading message from the DataTable
+          $('#sensor-data').DataTable().clear().draw();
         }
       },
       "columns": [{
