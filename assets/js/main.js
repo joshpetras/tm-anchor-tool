@@ -486,7 +486,41 @@
 
     // Initialize table
     console.log('Initializing table');
-    $('#sensor-data').DataTable(tableOptions);
+    var table = $('#sensor-data').DataTable(tableOptions);
+
+    table.on('init', function() {
+      // Load the searchBuilder filters from localStorage after initializing the table
+      loadSearchBuilderFilters();
+
+      // Save the searchBuilder filters to localStorage when the table is redrawn after a search
+      table.on('draw', saveSearchBuilderFilters);
+    });
+
+    function saveSearchBuilderFilters() {
+      var currentSearchBuilderData = JSON.stringify(table.searchBuilder.getDetails());
+      var storedSearchBuilderData = localStorage.getItem('searchBuilderData');
+
+      if (currentSearchBuilderData !== storedSearchBuilderData) {
+        localStorage.setItem('searchBuilderData', currentSearchBuilderData);
+        console.log('SearchBuilder filters saved:', currentSearchBuilderData);
+      }
+    }
+
+    function loadSearchBuilderFilters() {
+      var searchBuilderData = localStorage.getItem('searchBuilderData');
+      if (searchBuilderData) {
+        try {
+          searchBuilderData = JSON.parse(searchBuilderData);
+          console.log('SearchBuilder filters loaded:', searchBuilderData);
+          table.searchBuilder.rebuild(searchBuilderData);
+        } catch (e) {
+          console.error('Error loading searchBuilder filters:', e);
+        }
+      } else {
+        console.log('No searchBuilder filters found in localStorage');
+      }
+    }
+
     // Reload data every 10 seconds
     setInterval(reloadTableData, 10000);
   });
