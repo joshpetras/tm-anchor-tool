@@ -312,9 +312,9 @@
         {
           "data": "rep_obj.typ",
           "render": function(data, type, row) {
-            return (data !== null && data !== undefined) ? data : '';
+            return (data && data.value) ? data.value : '';
           }
-        }
+        },
         /*,
                 {
                   "data": "sensors.act_wucode",
