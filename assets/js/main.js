@@ -7,7 +7,8 @@
   $(document).ready(function() {
     console.log('Document ready');
     // Store the API endpoint
-    var apiEndpoint = "https://api-ouh.sostark.com/api/anchors";
+    var apiEndpoint = "https://i7oxndw6wa.execute-api.eu-central-1.amazonaws.com/prd/anchors";
+    // var apiEndpoint = "https://api-ouh.sostark.com/api/anchors";
     // var apiEndpoint = "https://prd.tcs31.sostark.nl/api/anchors";
 
     // Get the current date and time when the query is initiated
