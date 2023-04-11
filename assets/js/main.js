@@ -310,11 +310,11 @@
           }
         },
         {
-          "data": "rep_obj.typ",
+          "data": "rep_obj",
           "render": function(data, type, row) {
-            return (data && data.value) ? data.value : '';
+            return (data && data.typ) ? data.typ : '';
           }
-        },
+        }
         /*,
                 {
                   "data": "sensors.act_wucode",
