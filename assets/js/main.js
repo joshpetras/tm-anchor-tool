@@ -308,6 +308,12 @@
           "render": function(data, type, row) {
             return (data !== null && data !== undefined) ? data : '';
           }
+        },
+        {
+          "data": "rep_obj.typ",
+          "render": function(data, type, row) {
+            return (data !== null && data !== undefined) ? data : '';
+          }
         }
         /*,
                 {
@@ -408,6 +414,10 @@
         {
           "title": "SF",
           "targets": 17
+        },
+        {
+          "title": "Msg Typ",
+          "targets": 18
         }
         /*,
                 {
