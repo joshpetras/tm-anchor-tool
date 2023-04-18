@@ -7,9 +7,8 @@
   $(document).ready(function() {
     console.log('Document ready');
     // Store the API endpoint
-    var apiEndpoint = "https://i7oxndw6wa.execute-api.eu-central-1.amazonaws.com/prd/anchors";
-    // var apiEndpoint = "https://api-ouh.sostark.com/api/anchors";
-    // var apiEndpoint = "https://prd.tcs31.sostark.nl/api/anchors";
+    var apiEndpoint = "https://i7oxndw6wa.execute-api.eu-central-1.amazonaws.com/prd/anchors"; // Production Server
+    // var apiEndpoint = "https://prd.tcs31.sostark.nl/api/anchors"; // Development server
 
     // Get the current date and time when the query is initiated
     var dateString = moment().format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to create the date string
@@ -449,6 +448,18 @@
           orientation: 'landscape',
           pageSize: 'A3',
           download: 'open'
+        },
+        {
+          text: 'Save Filters',
+          action: function() {
+            saveSearchBuilderConfigToFile();
+          }
+        },
+        {
+          text: 'Load Filters',
+          action: function() {
+            document.getElementById('config-file').click();
+          }
         }
       ],
       // Apply good, warning, and poor colors to Time, GW RSSI, and GW SNR data
@@ -518,6 +529,19 @@
       }
     }
 
+    function saveSearchBuilderConfigToFile() {
+      var config = JSON.stringify(table.searchBuilder.getDetails());
+      var filename = 'searchBuilderConfig.json';
+      var blob = new Blob([config], {
+        type: 'application/json;charset=utf-8'
+      });
+      var link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
     function loadSearchBuilderFilters() {
       var searchBuilderData = localStorage.getItem('searchBuilderData');
       if (searchBuilderData) {
@@ -531,6 +555,26 @@
       } else {
         console.log('No searchBuilder filters found in localStorage');
       }
+    }
+
+    document.getElementById('config-file').addEventListener('change', loadSearchBuilderConfigFromFile);
+
+    function loadSearchBuilderConfigFromFile(event) {
+      var file = event.target.files[0];
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var configJson = JSON.parse(e.target.result);
+          table.searchBuilder.rebuild(configJson);
+          table.draw();
+        } catch (error) {
+          console.error('Error parsing the configuration file:', error);
+        }
+
+        // Clear the input value so the same file can be loaded again
+        event.target.value = '';
+      };
+      reader.readAsText(file);
     }
 
     // Reload data every 10 seconds
