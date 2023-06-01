@@ -9,6 +9,7 @@
     // Store the API endpoint
     var apiEndpoint = "https://i7oxndw6wa.execute-api.eu-central-1.amazonaws.com/prd/anchors"; // Production Server
     // var apiEndpoint = "https://prd.tcs31.sostark.nl/api/anchors"; // Development server
+    // var apiEndpoint = "https://demo.tcs.sostark.nl/api/anchors"; // Demo server
 
     // Get the current date and time when the query is initiated
     var dateString = moment().format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to create the date string
@@ -173,26 +174,66 @@
         },
         {
           "data": "sensors.bat",
+          "defaultContent": "",  // Set a default value
           "render": function(data, type, row) {
             return (data && data.value) ? data.value : '';
+          },
+          "createdCell": function(cell, cellData, rowData) {
+            if (rowData.sensors.bat && rowData.sensors.bat.value && rowData.sensors.bat.time){
+              var batDate = new Date(rowData.sensors.bat.time * 1000); // Convert timestamp to Date object
+              var batDateString = moment(batDate).startOf('second').fromNow(); // Use moment.js to format the date string
+              tippy(cell, {
+                content: batDateString,
+              });
+            }
           }
         },
         {
           "data": "sensors.tmp_anchor",
+          "defaultContent": "",  // Set a default value
           "render": function(data, type, row) {
             return (data && data.value) ? data.value : '';
+          },
+          "createdCell": function(cell, cellData, rowData) {
+            if (rowData.sensors.tmp_anchor && rowData.sensors.tmp_anchor.value && rowData.sensors.tmp_anchor.time){
+              var tmp_anchorDate = new Date(rowData.sensors.tmp_anchor.time * 1000); // Convert timestamp to Date object
+              var tmp_anchorDateString = moment(tmp_anchorDate).startOf('second').fromNow(); // Use moment.js to format the date string
+              tippy(cell, {
+                content: tmp_anchorDateString,
+              });
+            }
           }
         },
         {
           "data": "sensors.tmp_env",
+          "defaultContent": "",  // Set a default value
           "render": function(data, type, row) {
             return (data && data.value) ? data.value : '';
+          },
+          "createdCell": function(cell, cellData, rowData) {
+            if (rowData.sensors.tmp_env && rowData.sensors.tmp_env.value && rowData.sensors.tmp_env.time){
+              var tmp_envDate = new Date(rowData.sensors.tmp_env.time * 1000); // Convert timestamp to Date object
+              var tmp_envDateString = moment(tmp_envDate).startOf('second').fromNow(); // Use moment.js to format the date string
+              tippy(cell, {
+                content: tmp_envDateString,
+              });
+            }
           }
         },
         {
           "data": "sensors.hum",
+          "defaultContent": "",  // Set a default value
           "render": function(data, type, row) {
             return (data && data.value) ? data.value : '';
+          },
+          "createdCell": function(cell, cellData, rowData) {
+            if (rowData.sensors.hum && rowData.sensors.hum.value && rowData.sensors.hum.time){
+              var humDate = new Date(rowData.sensors.hum.time * 1000); // Convert timestamp to Date object
+              var humDateString = moment(humDate).startOf('second').fromNow(); // Use moment.js to format the date string
+              tippy(cell, {
+                content: humDateString,
+              });
+            }
           }
         },
         /*{
