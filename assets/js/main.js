@@ -25,7 +25,7 @@
       var baseUrl = "https://api.mapbox.com/styles/v1/joshpetras/clg2rx9hm009o01nzrjj3iko0/static/";
       var marker = "pin-l+ff2600(" + longitude + "," + latitude + ")";
       // var mapCenter = "/" + longitude + "," + latitude + ",15.99,0";
-      var mapCenter = "/10.4259,55.3613,15.26,0"; // Specific to OUH project
+      var mapCenter = "/10.4259,55.3613,16.00,0"; // Specific to OUH project
       var dimensions = "/640x480";
       var accessToken = "?access_token=pk.eyJ1Ijoiam9zaHBldHJhcyIsImEiOiJjbGcwemQ3Z3YwcmszM3BxMTZubmdoc2FzIn0.XeRFM2zGYI1zMP-ZO9dOFA";
 
