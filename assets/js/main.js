@@ -10,7 +10,7 @@
     var selectedEndpoint = document.getElementById("endpoint-selector").value;
     var apiEndpoint = selectedEndpoint;
     // Load the selected endpoint from localStorage (or use a default if not set)
-    var savedApiEndpoint = localStorage.getItem("selectedApiEndpoint");
+    var savedApiEndpoint = localStorage.getItem("selectedAnchorApiEndpoint");
     if (savedApiEndpoint) {
       apiEndpoint = savedApiEndpoint;
       document.getElementById("endpoint-selector").value = savedApiEndpoint;  // Set the dropdown value
@@ -27,7 +27,7 @@
         table.ajax.url(apiEndpoint).load();
 
         // Save the selected endpoint to localStorage
-        localStorage.setItem("selectedApiEndpoint", apiEndpoint);
+        localStorage.setItem("selectedAnchorApiEndpoint", apiEndpoint);
     });
 
     // Get the current date and time when the query is initiated
