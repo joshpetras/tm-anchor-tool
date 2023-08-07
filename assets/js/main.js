@@ -7,9 +7,19 @@
   $(document).ready(function() {
     console.log('Document ready');
     // Store the API endpoint
-    var apiEndpoint = "https://i7oxndw6wa.execute-api.eu-central-1.amazonaws.com/prd/anchors"; // Production Server
+    var selectedEndpoint = document.getElementById("endpoint-selector").value;
+    var apiEndpoint = selectedEndpoint;
+    // var apiEndpoint = "https://i7oxndw6wa.execute-api.eu-central-1.amazonaws.com/prd/anchors"; // Production Server
     // var apiEndpoint = "https://prd.tcs31.sostark.nl/api/anchors"; // Development server
     // var apiEndpoint = "https://demo.tcs.sostark.nl/api/anchors"; // Demo server
+
+    document.getElementById("endpoint-selector").addEventListener("change", function() {
+        var newEndpoint = document.getElementById("endpoint-selector").value;
+        var table = $('#sensor-data').DataTable();
+
+        // Update the DataTable's AJAX source
+        table.ajax.url(newEndpoint).load();
+    });
 
     // Get the current date and time when the query is initiated
     var dateString = moment().format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to create the date string
