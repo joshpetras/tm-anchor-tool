@@ -9,6 +9,12 @@
     // Store the API endpoint
     var selectedEndpoint = document.getElementById("endpoint-selector").value;
     var apiEndpoint = selectedEndpoint;
+    // Load the selected endpoint from localStorage (or use a default if not set)
+    var savedApiEndpoint = localStorage.getItem("selectedApiEndpoint");
+    if (savedApiEndpoint) {
+      apiEndpoint = savedApiEndpoint;
+      document.getElementById("endpoint-selector").value = savedApiEndpoint;  // Set the dropdown value
+    }
     // var apiEndpoint = "https://i7oxndw6wa.execute-api.eu-central-1.amazonaws.com/prd/anchors"; // Production Server
     // var apiEndpoint = "https://prd.tcs31.sostark.nl/api/anchors"; // Development server
     // var apiEndpoint = "https://demo.tcs.sostark.nl/api/anchors"; // Demo server
@@ -19,6 +25,9 @@
 
         // Update the DataTable's AJAX source
         table.ajax.url(apiEndpoint).load();
+
+        // Save the selected endpoint to localStorage
+        localStorage.setItem("selectedApiEndpoint", apiEndpoint);
     });
 
     // Get the current date and time when the query is initiated
