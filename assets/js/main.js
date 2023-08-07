@@ -14,11 +14,11 @@
     // var apiEndpoint = "https://demo.tcs.sostark.nl/api/anchors"; // Demo server
 
     document.getElementById("endpoint-selector").addEventListener("change", function() {
-        var newEndpoint = document.getElementById("endpoint-selector").value;
+        apiEndpoint = document.getElementById("endpoint-selector").value;
         var table = $('#sensor-data').DataTable();
 
         // Update the DataTable's AJAX source
-        table.ajax.url(newEndpoint).load();
+        table.ajax.url(apiEndpoint).load();
     });
 
     // Get the current date and time when the query is initiated
