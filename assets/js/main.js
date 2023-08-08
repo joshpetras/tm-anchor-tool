@@ -23,8 +23,10 @@
         apiEndpoint = document.getElementById("endpoint-selector").value;
         var table = $('#sensor-data').DataTable();
 
-        // Update the DataTable's AJAX source
-        table.ajax.url(apiEndpoint).load();
+        // Update the DataTable's AJAX source with increased timeout
+        table.ajax.url(apiEndpoint).load(null, false, {
+            timeout: 10000  // 10 seconds
+        });
 
         // Save the selected endpoint to localStorage
         localStorage.setItem("selectedAnchorApiEndpoint", apiEndpoint);
