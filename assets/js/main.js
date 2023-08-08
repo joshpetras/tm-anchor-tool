@@ -20,6 +20,8 @@
     // var apiEndpoint = "https://demo.tcs.sostark.nl/api/anchors"; // Demo server
 
     document.getElementById("endpoint-selector").addEventListener("change", function() {
+        clearInterval(intervalId);  // Clear the interval when changing the API endpoint
+
         apiEndpoint = document.getElementById("endpoint-selector").value;
         var table = $('#sensor-data').DataTable();
 
@@ -30,6 +32,9 @@
 
         // Save the selected endpoint to localStorage
         localStorage.setItem("selectedAnchorApiEndpoint", apiEndpoint);
+
+        // Restart the interval after the data is loaded
+        intervalId = setInterval(reloadTableData, 10000);
     });
 
     // Get the current date and time when the query is initiated
@@ -640,5 +645,5 @@
     }
 
     // Reload data every 10 seconds
-    setInterval(reloadTableData, 10000);
+    var intervalId = setInterval(reloadTableData, 10000);  // Keep a reference to the interval
   });
