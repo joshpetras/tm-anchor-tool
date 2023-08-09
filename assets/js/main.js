@@ -1,12 +1,17 @@
   var missedFramesData = {};
 
   function reloadTableData() {
-      document.getElementById("endpoint-selector").blur();  // Force collapse of the dropdown
-      document.getElementById("loading-spinner").style.display = 'inline-block';  // Show the spinner
-      document.getElementById("endpoint-selector").disabled = true;  // Disable dropdown
+      // Force collapse of the dropdown
+      document.getElementById("endpoint-selector").blur();
+
+      // Hide the dropdown and show the spinner
+      document.getElementById("endpoint-selector").style.display = 'none';
+      document.getElementById("loading-spinner").style.display = 'inline-block';
+
       $('#sensor-data').DataTable().ajax.reload(function() {
-          document.getElementById("endpoint-selector").disabled = false;  // Re-enable dropdown
-          document.getElementById("loading-spinner").style.display = 'none';  // Hide the spinner
+          // Hide the spinner and show the dropdown
+          document.getElementById("loading-spinner").style.display = 'none';
+          document.getElementById("endpoint-selector").style.display = 'inline-block';
       }, false);
   }
 
