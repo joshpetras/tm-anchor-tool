@@ -1,7 +1,9 @@
   var missedFramesData = {};
 
   function reloadTableData() {
+    document.getElementById("endpoint-selector").disabled = true;  // Disable dropdown
     $('#sensor-data').DataTable().ajax.reload(null, false);
+    document.getElementById("endpoint-selector").disabled = false;  // Re-enable dropdown
   }
 
   $(document).ready(function() {
