@@ -1,6 +1,16 @@
   var missedFramesData = {};
 
   function reloadTableData() {
+      document.getElementById("endpoint-selector").blur();  // Force collapse of the dropdown
+      document.getElementById("endpoint-selector").disabled = true;  // Disable dropdown
+      $('#sensor-data').DataTable().ajax.reload(function() {
+          document.getElementById("endpoint-selector").disabled = false;  // Re-enable dropdown
+      }, false);
+  }
+  function reloadTableData() {
+      // Force collapse of the dropdown
+      document.getElementById("endpoint-selector").blur();
+
       document.getElementById("endpoint-selector").disabled = true;  // Disable dropdown
       $('#sensor-data').DataTable().ajax.reload(function() {
           document.getElementById("endpoint-selector").disabled = false;  // Re-enable dropdown within the callback
