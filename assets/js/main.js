@@ -187,7 +187,7 @@
             return row.sensors.lw.value.gateways ? row.sensors.lw.value.gateways.length : "";
           }
         },
-        {
+        /*{
           "data": "tokens",
           "render": function(data, type, row) {
             if (data !== null && typeof data === "object") {
@@ -196,7 +196,7 @@
               return "";
             }
           }
-        },
+        },*/
         {
           "data": "time",
           "render": function(data, type, row) {
@@ -207,6 +207,22 @@
               return dateString;
             }
             return data;
+          }
+        },
+        {
+          "data": "sensors.fall",
+          "defaultContent": "",  // Set a default value
+          "render": function(data, type, row) {
+            return (data && data.value) ? data.value : '';
+          },
+          "createdCell": function(cell, cellData, rowData) {
+            if (rowData.sensors.fall && rowData.sensors.fall.value && rowData.sensors.fall.time){
+              var fallDate = new Date(rowData.sensors.fall.time * 1000); // Convert timestamp to Date object
+              var fallDateString = moment(fallDate).startOf('second').fromNow(); // Use moment.js to format the date string
+              tippy(cell, {
+                content: fallDateString,
+              });
+            }
           }
         },
         {
@@ -435,14 +451,18 @@
           "title": "Connected Gateways",
           "targets": 6
         },
-        {
+        /*{
           "title": "Token Count",
           "targets": 7
-        },
+        },*/
         {
           "title": "Time",
-          "targets": 8,
+          "targets": 7,
           "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
+        },
+        {
+          "title": "Fall Detected",
+          "targets": 8
         },
         {
           "title": "Battery",
@@ -543,23 +563,23 @@
       // Apply good, warning, and poor colors to Time, GW RSSI, and GW SNR data
       "createdRow": function(row, data, dataIndex) {
         var now = moment();
-        var anchorTime = moment($('td:eq(8)', row).text());
+        var anchorTime = moment($('td:eq(7)', row).text());
         var diffInMilliseconds = now.diff(anchorTime);
         var batteryValue = $('td:eq(9)', row).text();
         var rssi = $('td:eq(13)', row).text();
         var snr = $('td:eq(14)', row).text();
         if (batteryValue !== '') {
           if (batteryValue < 3) {
-            $('td:eq(9)', row).addClass('poor');
+            $('td:eq(10)', row).addClass('poor');
           } else if (batteryValue < 3.2) {
-            $('td:eq(9)', row).addClass('warning');
+            $('td:eq(10)', row).addClass('warning');
           }
         }
         if (anchorTime !== '') {
           if (diffInMilliseconds > 2 * 60 * 60 * 1000) {
-            $('td:eq(8)', row).addClass('poor');
+            $('td:eq(7)', row).addClass('poor');
           } else if (diffInMilliseconds > 1 * 60 * 60 * 1000) {
-            $('td:eq(8)', row).addClass('warning');
+            $('td:eq(7)', row).addClass('warning');
           }
         }
         if (rssi !== '') {
