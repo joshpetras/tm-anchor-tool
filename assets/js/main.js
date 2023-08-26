@@ -734,16 +734,13 @@
         // Build the search criteria
         var criteria = {
             logic: 'AND',  // Setting the logic to AND
-            criteria: [{
-                condition: 'OR',  // Using OR for the TPIDs
-                rules: tpids.map(function(tpid) {
-                    return {
-                        condition: '=',
-                        data: 'tpid',
-                        value: tpid
-                    };
-                })
-            }]
+            criteria: tpids.map(function(tpid) {
+                return {
+                    condition: '=',
+                    data: 'tpid',
+                    value: tpid
+                };
+            })
         };
 
         // Set the search criteria using the SearchBuilder's `rebuild` method
