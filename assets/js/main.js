@@ -731,20 +731,20 @@
     function updateSearchBuilderFilters(tpids) {
         console.log("Parsed TPIDs:", tpids);
 
-        // Build the search criteria
-        var criteria = {
-            logic: 'AND',  // Setting the logic to AND
-            criteria: tpids.map(function(tpid) {
-                return {
-                    condition: '=',
-                    data: 'tpid',
-                    value: tpid
-                };
-            })
-        };
+        var criteria = tpids.map(function(tpid) {
+            return {
+                condition: '=',
+                data: 'Anchor (TPID)',
+                origData: 'tpid',
+                type: 'string',
+                value: [tpid]
+            };
+        });
 
-        // Set the search criteria using the SearchBuilder's `rebuild` method
-        table.searchBuilder.rebuild(criteria);
+        table.searchBuilder.rebuild({
+            logic: 'OR',
+            criteria: criteria
+        });
 
         // Redraw the table to apply the filters
         table.draw();
