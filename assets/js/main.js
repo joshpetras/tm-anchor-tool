@@ -730,21 +730,28 @@
 
     function updateSearchBuilderFilters(tpids) {
 
-      // Log the parsed TPIDs to the console
-      console.log("Parsed TPIDs:", tpids);
+        // Log the parsed TPIDs to the console
+        console.log("Parsed TPIDs:", tpids);
 
-      var table = $('#sensor-data').DataTable();
+        var table = $('#sensor-data').DataTable();
 
-      var searchBuilderData = {
-        // The structure might vary based on your needs and the SearchBuilder version
-        criteria: [{
-          condition: '=',
-          data: 'tpid',
-          value: tpids
-        }]
-      };
-      table.state().searchBuilder = searchBuilderData;
-      table.draw();
+        // Build the search criteria
+        var criteria = {
+            condition: 'OR',  // Using OR since we want to match any of the TPIDs
+            rules: tpids.map(function(tpid) {
+                return {
+                    condition: '=',
+                    data: 'tpid',
+                    value: tpid
+                };
+            })
+        };
+
+        // Set the search criteria using the SearchBuilder API
+        table.searchBuilder.container().searchBuilder.s.setCriteria(criteria);
+
+        // Redraw the table to apply the filters
+        table.draw();
     }
 
     // Reload data every 10 seconds
