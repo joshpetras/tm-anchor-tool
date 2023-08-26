@@ -1,18 +1,18 @@
   var missedFramesData = {};
 
   function reloadTableData() {
-      // Force collapse of the dropdown
-      document.getElementById("endpoint-selector").blur();
+    // Force collapse of the dropdown
+    document.getElementById("endpoint-selector").blur();
 
-      // Hide the dropdown and show the spinner
-      document.getElementById("endpoint-selector").style.display = 'none';
-      document.getElementById("loading-spinner").style.display = 'inline-block';
+    // Hide the dropdown and show the spinner
+    document.getElementById("endpoint-selector").style.display = 'none';
+    document.getElementById("loading-spinner").style.display = 'inline-block';
 
-      $('#sensor-data').DataTable().ajax.reload(function() {
-          // Hide the spinner and show the dropdown
-          document.getElementById("loading-spinner").style.display = 'none';
-          document.getElementById("endpoint-selector").style.display = 'inline-block';
-      }, false);
+    $('#sensor-data').DataTable().ajax.reload(function() {
+      // Hide the spinner and show the dropdown
+      document.getElementById("loading-spinner").style.display = 'none';
+      document.getElementById("endpoint-selector").style.display = 'inline-block';
+    }, false);
   }
 
   $(document).ready(function() {
@@ -24,28 +24,28 @@
     var savedApiEndpoint = localStorage.getItem("selectedAnchorApiEndpoint");
     if (savedApiEndpoint) {
       apiEndpoint = savedApiEndpoint;
-      document.getElementById("endpoint-selector").value = savedApiEndpoint;  // Set the dropdown value
+      document.getElementById("endpoint-selector").value = savedApiEndpoint; // Set the dropdown value
     }
     // var apiEndpoint = "https://i7oxndw6wa.execute-api.eu-central-1.amazonaws.com/prd/anchors"; // Production Server
     // var apiEndpoint = "https://prd.tcs31.sostark.nl/api/anchors"; // Development server
     // var apiEndpoint = "https://demo.tcs.sostark.nl/api/anchors"; // Demo server
 
     document.getElementById("endpoint-selector").addEventListener("change", function() {
-        clearInterval(intervalId);  // Clear the interval when changing the API endpoint
+      clearInterval(intervalId); // Clear the interval when changing the API endpoint
 
-        apiEndpoint = document.getElementById("endpoint-selector").value;
-        var table = $('#sensor-data').DataTable();
+      apiEndpoint = document.getElementById("endpoint-selector").value;
+      var table = $('#sensor-data').DataTable();
 
-        // Update the DataTable's AJAX source with increased timeout
-        table.ajax.url(apiEndpoint).load(null, false, {
-            timeout: 10000  // 10 seconds
-        });
+      // Update the DataTable's AJAX source with increased timeout
+      table.ajax.url(apiEndpoint).load(null, false, {
+        timeout: 10000 // 10 seconds
+      });
 
-        // Save the selected endpoint to localStorage
-        localStorage.setItem("selectedAnchorApiEndpoint", apiEndpoint);
+      // Save the selected endpoint to localStorage
+      localStorage.setItem("selectedAnchorApiEndpoint", apiEndpoint);
 
-        // Restart the interval after the data is loaded
-        intervalId = setInterval(reloadTableData, 10000);
+      // Restart the interval after the data is loaded
+      intervalId = setInterval(reloadTableData, 10000);
     });
 
     // Get the current date and time when the query is initiated
@@ -96,6 +96,12 @@
       },
       "columns": [{
           "data": "tpid",
+          "render": function(data, type, row) {
+            if (type === 'display' || type === 'filter') {
+              return data.replace('A-d', '');
+            }
+            return data;
+          },
           "createdCell": function(cell, cellData, rowData) {
             // Check if longitude and latitude values exist
             if (rowData.geoInfo && rowData.geoInfo.longitude && rowData.geoInfo.latitude) {
@@ -211,12 +217,12 @@
         },
         {
           "data": "sensors.fall",
-          "defaultContent": "",  // Set a default value
+          "defaultContent": "", // Set a default value
           "render": function(data, type, row) {
             return (data && data.value) ? data.value : '';
           },
           "createdCell": function(cell, cellData, rowData) {
-            if (rowData.sensors.fall && rowData.sensors.fall.value && rowData.sensors.fall.time){
+            if (rowData.sensors.fall && rowData.sensors.fall.value && rowData.sensors.fall.time) {
               var fallDate = new Date(rowData.sensors.fall.time * 1000); // Convert timestamp to Date object
               var fallDateString = moment(fallDate).startOf('second').fromNow(); // Use moment.js to format the date string
               tippy(cell, {
@@ -227,12 +233,12 @@
         },
         {
           "data": "sensors.bat",
-          "defaultContent": "",  // Set a default value
+          "defaultContent": "", // Set a default value
           "render": function(data, type, row) {
             return (data && data.value) ? data.value : '';
           },
           "createdCell": function(cell, cellData, rowData) {
-            if (rowData.sensors.bat && rowData.sensors.bat.value && rowData.sensors.bat.time){
+            if (rowData.sensors.bat && rowData.sensors.bat.value && rowData.sensors.bat.time) {
               var batDate = new Date(rowData.sensors.bat.time * 1000); // Convert timestamp to Date object
               var batDateString = moment(batDate).startOf('second').fromNow(); // Use moment.js to format the date string
               tippy(cell, {
@@ -243,12 +249,12 @@
         },
         {
           "data": "sensors.tmp_anchor",
-          "defaultContent": "",  // Set a default value
+          "defaultContent": "", // Set a default value
           "render": function(data, type, row) {
             return (data && data.value) ? data.value : '';
           },
           "createdCell": function(cell, cellData, rowData) {
-            if (rowData.sensors.tmp_anchor && rowData.sensors.tmp_anchor.value && rowData.sensors.tmp_anchor.time){
+            if (rowData.sensors.tmp_anchor && rowData.sensors.tmp_anchor.value && rowData.sensors.tmp_anchor.time) {
               var tmp_anchorDate = new Date(rowData.sensors.tmp_anchor.time * 1000); // Convert timestamp to Date object
               var tmp_anchorDateString = moment(tmp_anchorDate).startOf('second').fromNow(); // Use moment.js to format the date string
               tippy(cell, {
@@ -259,12 +265,12 @@
         },
         {
           "data": "sensors.tmp_env",
-          "defaultContent": "",  // Set a default value
+          "defaultContent": "", // Set a default value
           "render": function(data, type, row) {
             return (data && data.value) ? data.value : '';
           },
           "createdCell": function(cell, cellData, rowData) {
-            if (rowData.sensors.tmp_env && rowData.sensors.tmp_env.value && rowData.sensors.tmp_env.time){
+            if (rowData.sensors.tmp_env && rowData.sensors.tmp_env.value && rowData.sensors.tmp_env.time) {
               var tmp_envDate = new Date(rowData.sensors.tmp_env.time * 1000); // Convert timestamp to Date object
               var tmp_envDateString = moment(tmp_envDate).startOf('second').fromNow(); // Use moment.js to format the date string
               tippy(cell, {
@@ -275,12 +281,12 @@
         },
         {
           "data": "sensors.hum",
-          "defaultContent": "",  // Set a default value
+          "defaultContent": "", // Set a default value
           "render": function(data, type, row) {
             return (data && data.value) ? data.value : '';
           },
           "createdCell": function(cell, cellData, rowData) {
-            if (rowData.sensors.hum && rowData.sensors.hum.value && rowData.sensors.hum.time){
+            if (rowData.sensors.hum && rowData.sensors.hum.value && rowData.sensors.hum.time) {
               var humDate = new Date(rowData.sensors.hum.time * 1000); // Convert timestamp to Date object
               var humDateString = moment(humDate).startOf('second').fromNow(); // Use moment.js to format the date string
               tippy(cell, {
@@ -676,5 +682,5 @@
     }
 
     // Reload data every 10 seconds
-    var intervalId = setInterval(reloadTableData, 10000);  // Keep a reference to the interval
+    var intervalId = setInterval(reloadTableData, 10000); // Keep a reference to the interval
   });
