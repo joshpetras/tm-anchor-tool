@@ -732,8 +732,6 @@
         // Log the parsed TPIDs to the console
         console.log("Parsed TPIDs:", tpids);
 
-        var table = $('#sensor-data').DataTable();
-
         // Build the search criteria
         var criteria = {
             condition: 'OR',  // Using OR since we want to match any of the TPIDs
