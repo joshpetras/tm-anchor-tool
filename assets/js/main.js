@@ -729,19 +729,21 @@
     }
 
     function updateSearchBuilderFilters(tpids) {
-        // Log the parsed TPIDs to the console
         console.log("Parsed TPIDs:", tpids);
 
         // Build the search criteria
         var criteria = {
-            condition: 'OR',  // Using OR since we want to match any of the TPIDs
-            rules: tpids.map(function(tpid) {
-                return {
-                    condition: '=',
-                    data: 'tpid',
-                    value: tpid
-                };
-            })
+            logic: 'AND',  // Setting the logic to AND
+            criteria: [{
+                condition: 'OR',  // Using OR for the TPIDs
+                rules: tpids.map(function(tpid) {
+                    return {
+                        condition: '=',
+                        data: 'tpid',
+                        value: tpid
+                    };
+                })
+            }]
         };
 
         // Set the search criteria using the SearchBuilder's `rebuild` method
