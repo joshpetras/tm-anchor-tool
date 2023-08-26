@@ -729,7 +729,6 @@
     }
 
     function updateSearchBuilderFilters(tpids) {
-
         // Log the parsed TPIDs to the console
         console.log("Parsed TPIDs:", tpids);
 
@@ -747,8 +746,8 @@
             })
         };
 
-        // Set the search criteria using the SearchBuilder API
-        table.searchBuilder.container().searchBuilder.s.setCriteria(criteria);
+        // Set the search criteria using the SearchBuilder's `rebuild` method
+        table.searchBuilder.rebuild(criteria);
 
         // Redraw the table to apply the filters
         table.draw();
