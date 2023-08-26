@@ -713,6 +713,9 @@
           console.error('Error processing the file:', error.message);
           alert('Failed to process the uploaded file. Please ensure it has the correct format.');
         }
+        
+        // Clear the input value so the same file can be loaded again
+        event.target.value = '';
       };
 
       reader.onerror = function() {
