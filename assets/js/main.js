@@ -564,6 +564,12 @@
           action: function() {
             document.getElementById('config-file').click();
           }
+        },
+        {
+          text: 'Load TPID CSV List',
+          action: function() {
+            document.getElementById('csvFileInput').click();
+          }
         }
       ],
       // Apply good, warning, and poor colors to Time, GW RSSI, and GW SNR data
@@ -680,6 +686,52 @@
       };
       reader.readAsText(file);
     }
+
+    document.getElementById('csvFileInput').addEventListener('change', function(event) {
+      var file = event.target.files[0];
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        try {
+          var contents = e.target.result;
+          var tpids = contents.split('\n').filter(Boolean); // Splitting by newline for CSV and filtering out any empty lines
+
+          // Basic validation to check if the content looks like TPID values
+          if (tpids.length === 0 || !tpids.every(isValidTPID)) {
+            throw new Error('The file does not contain valid TPID values.');
+          }
+
+          updateSearchBuilderFilters(tpids);
+        } catch (error) {
+          console.error('Error processing the file:', error.message);
+          alert('Failed to process the uploaded file. Please ensure it has the correct format.');
+        }
+      };
+
+      reader.onerror = function() {
+        console.error('Error reading the file.');
+        alert('Error reading the uploaded file. Please try again.');
+      };
+
+      reader.readAsText(file);
+    });
+
+    function isValidTPID(tpid) {
+        // Regular expression to match a three-character hexadecimal number (from 000 to fff)
+        return /^[0-9a-fA-F]{3}$/.test(tpid);
+    }
+
+    function updateSearchBuilderFilters(tpids) {
+      var table = $('#sensor-data').DataTable();
+
+      // Assuming the TPID column is the first column (index 0).
+      // Adjust the column index as needed.
+      table.searchBuilder.get(0)
+        .val('= ' + tpids.join(' | ')); // Using OR logic for multiple TPIDs
+
+      table.draw();
+    }
+
 
     // Reload data every 10 seconds
     var intervalId = setInterval(reloadTableData, 10000); // Keep a reference to the interval
