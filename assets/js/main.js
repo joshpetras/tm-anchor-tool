@@ -696,9 +696,16 @@
           var contents = e.target.result;
           var tpids = contents.split('\n').filter(Boolean); // Splitting by newline for CSV and filtering out any empty lines
 
+          // New code to log invalid TPIDs
+          tpids.forEach(function(tpid) {
+              if (!isValidTPID(tpid.trim())) {  // Using trim() to remove any potential whitespace
+                  console.log("Invalid TPID:", tpid);
+              }
+          });
+
           // Basic validation to check if the content looks like TPID values
-          if (tpids.length === 0 || !tpids.every(isValidTPID)) {
-            throw new Error('The file does not contain valid TPID values.');
+          if (tpids.length === 0 || !tpids.every(tpid => isValidTPID(tpid.trim()))) {
+              throw new Error('The file does not contain valid TPID values.');
           }
 
           updateSearchBuilderFilters(tpids);
