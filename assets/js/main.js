@@ -734,7 +734,9 @@
     function updateSearchBuilderFilters(tpids) {
         console.log("Parsed TPIDs:", tpids);
 
-        var currentCriteria = table.searchBuilder.getDetails() || { criteria: [], logic: 'AND' };
+        var currentCriteria = table.searchBuilder.getDetails() || {};
+        currentCriteria.criteria = currentCriteria.criteria || [];
+        currentCriteria.logic = currentCriteria.logic || 'AND';
 
         // Create criteria for the new TPIDs
         var newCriteria = {
