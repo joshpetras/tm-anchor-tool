@@ -698,14 +698,14 @@
 
           // New code to log invalid TPIDs
           tpids.forEach(function(tpid) {
-              if (!isValidTPID(tpid.trim())) {  // Using trim() to remove any potential whitespace
-                  console.log("Invalid TPID:", tpid);
-              }
+            if (!isValidTPID(tpid.trim())) { // Using trim() to remove any potential whitespace
+              console.log("Invalid TPID:", tpid);
+            }
           });
 
           // Basic validation to check if the content looks like TPID values
           if (tpids.length === 0 || !tpids.every(tpid => isValidTPID(tpid.trim()))) {
-              throw new Error('The file does not contain valid TPID values.');
+            throw new Error('The file does not contain valid TPID values.');
           }
 
           updateSearchBuilderFilters(tpids);
@@ -724,21 +724,24 @@
     });
 
     function isValidTPID(tpid) {
-        // Regular expression to match a three-character hexadecimal number (from 000 to fff)
-        return /^[0-9a-fA-F]{3}$/.test(tpid);
+      // Regular expression to match a three-character hexadecimal number (from 000 to fff)
+      return /^[0-9a-fA-F]{3}$/.test(tpid);
     }
 
     function updateSearchBuilderFilters(tpids) {
       var table = $('#sensor-data').DataTable();
 
-      // Assuming the TPID column is the first column (index 0).
-      // Adjust the column index as needed.
-      table.searchBuilder.get(0)
-        .val('= ' + tpids.join(' | ')); // Using OR logic for multiple TPIDs
-
+      var searchBuilderData = {
+        // The structure might vary based on your needs and the SearchBuilder version
+        criteria: [{
+          condition: '=',
+          data: 'tpid',
+          value: tpids
+        }]
+      };
+      table.state().searchBuilder = searchBuilderData;
       table.draw();
     }
-
 
     // Reload data every 10 seconds
     var intervalId = setInterval(reloadTableData, 10000); // Keep a reference to the interval
