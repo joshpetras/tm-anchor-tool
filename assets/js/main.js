@@ -713,7 +713,7 @@
           console.error('Error processing the file:', error.message);
           alert('Failed to process the uploaded file. Please ensure it has the correct format.');
         }
-        
+
         // Clear the input value so the same file can be loaded again
         event.target.value = '';
       };
@@ -734,7 +734,10 @@
     function updateSearchBuilderFilters(tpids) {
         console.log("Parsed TPIDs:", tpids);
 
-        var criteria = tpids.map(function(tpid) {
+        var currentCriteria = table.searchBuilder.getDetails();
+
+        // Create criteria for the new TPIDs
+        var newCriteria = tpids.map(function(tpid) {
             return {
                 condition: '=',
                 data: 'Anchor (TPID)',
@@ -744,10 +747,22 @@
             };
         });
 
-        table.searchBuilder.rebuild({
-            logic: 'OR',
-            criteria: criteria
-        });
+        // Check if there are existing filters for the 'Anchor (TPID)' column
+        var existingTPIDCriteria = (currentCriteria.criteria || []).filter(criterion => criterion.data === 'Anchor (TPID)');
+
+        if (existingTPIDCriteria.length > 0) {
+            // If there are existing filters, append the new TPIDs
+            existingTPIDCriteria[0].criteria = existingTPIDCriteria[0].criteria.concat(newCriteria);
+        } else {
+            // If not, just add the new TPIDs
+            currentCriteria.criteria = (currentCriteria.criteria || []).concat({
+                logic: 'OR',
+                criteria: newCriteria
+            });
+        }
+
+        // Rebuild the search criteria using the updated criteria
+        table.searchBuilder.rebuild(currentCriteria);
 
         // Redraw the table to apply the filters
         table.draw();
