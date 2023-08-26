@@ -729,6 +729,10 @@
     }
 
     function updateSearchBuilderFilters(tpids) {
+
+      // Log the parsed TPIDs to the console
+      console.log("Parsed TPIDs:", tpids);
+
       var table = $('#sensor-data').DataTable();
 
       var searchBuilderData = {
