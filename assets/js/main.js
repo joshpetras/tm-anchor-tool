@@ -751,8 +751,18 @@
         var existingTPIDCriteria = (currentCriteria.criteria || []).filter(criterion => criterion.data === 'Anchor (TPID)');
 
         if (existingTPIDCriteria.length > 0) {
-            // If there are existing filters, append the new TPIDs
-            existingTPIDCriteria[0].criteria = existingTPIDCriteria[0].criteria.concat(newCriteria);
+            // Check if the existing TPID criteria has sub-criteria
+            if (existingTPIDCriteria[0].criteria) {
+                // If sub-criteria exist, append the new TPIDs
+                existingTPIDCriteria[0].criteria = existingTPIDCriteria[0].criteria.concat(newCriteria);
+            } else {
+                // If there are no sub-criteria, it means there's only one TPID set.
+                // Convert the current criteria into an OR logic with sub-criteria
+                existingTPIDCriteria[0] = {
+                    logic: 'OR',
+                    criteria: [existingTPIDCriteria[0]].concat(newCriteria)
+                };
+            }
         } else {
             // If not, just add the new TPIDs
             currentCriteria.criteria = (currentCriteria.criteria || []).concat({
