@@ -694,7 +694,8 @@
       reader.onload = function(e) {
         try {
           var contents = e.target.result;
-          var tpids = contents.split('\n').map(tpid => tpid.trim()).filter(Boolean); // Splitting by newline for CSV and filtering out any empty lines
+          // Splitting by newline for CSV, filtering out any empty lines, and converting to lower case
+          var tpids = contents.split('\n').map(tpid => tpid.trim().toLowerCase()).filter(Boolean);
 
           // New code to log invalid TPIDs
           tpids.forEach(function(tpid) {
