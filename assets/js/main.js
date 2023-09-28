@@ -582,9 +582,9 @@
         var snr = $('td:eq(14)', row).text();
         if (batteryValue !== '') {
           if (batteryValue < 3) {
-            $('td:eq(10)', row).addClass('poor');
+            $('td:eq(9)', row).addClass('poor');
           } else if (batteryValue < 3.2) {
-            $('td:eq(10)', row).addClass('warning');
+            $('td:eq(9)', row).addClass('warning');
           }
         }
         if (anchorTime !== '') {
