@@ -206,7 +206,7 @@
         {
           "data": "geoInfo.time",
           "render": function(data, type, row) {
-            if (type === 'display' || type === 'filter') {
+            if (data && type === 'display' || type === 'filter') {
               var date = new Date(data * 1000); // Convert timestamp to Date object
               var dateString = moment(date).format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to format the date string
               // var dateString = moment(date).startOf('second').fromNow(); // Use moment.js to format the date string
