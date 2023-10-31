@@ -204,6 +204,18 @@
           }
         },*/
         {
+          "data": "geoInfo.time",
+          "render": function(data, type, row) {
+            if (type === 'display' || type === 'filter') {
+              var date = new Date(data * 1000); // Convert timestamp to Date object
+              var dateString = moment(date).format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to format the date string
+              // var dateString = moment(date).startOf('second').fromNow(); // Use moment.js to format the date string
+              return dateString;
+            }
+            return data;
+          }
+        },
+        {
           "data": "time",
           "render": function(data, type, row) {
             if (type === 'display' || type === 'filter') {
@@ -462,30 +474,35 @@
           "targets": 7
         },*/
         {
-          "title": "Time",
+          "title": "Installed",
           "targets": 7,
           "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
         },
         {
-          "title": "Fall Detected",
-          "targets": 8
+          "title": "Last Seen",
+          "targets": 8,
+          "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
         },
         {
-          "title": "Battery",
+          "title": "Fall Detected",
           "targets": 9
         },
         {
-          "title": "Temp (Anchor)",
+          "title": "Battery",
           "targets": 10
         },
         {
-          "title": "Temp (Environment)",
+          "title": "Temp (Anchor)",
           "targets": 11
+        },
+        {
+          "title": "Temp (Environment)",
+          "targets": 12
         },
 
         {
           "title": "Humidity",
-          "targets": 12
+          "targets": 13
         },
         /*{
           "title": "Pressure",
@@ -501,27 +518,27 @@
         }, */
         {
           "title": "GW RSSI",
-          "targets": 13
-        },
-        {
-          "title": "GW SNR",
           "targets": 14
         },
         {
-          "title": "Frame Count",
+          "title": "GW SNR",
           "targets": 15
         },
         {
-          "title": "Missed Frames",
+          "title": "Frame Count",
           "targets": 16
         },
         {
-          "title": "SF",
+          "title": "Missed Frames",
           "targets": 17
         },
         {
-          "title": "Msg Typ",
+          "title": "SF",
           "targets": 18
+        },
+        {
+          "title": "Msg Typ",
+          "targets": 19
         }
         /*,
                 {
@@ -575,43 +592,43 @@
       // Apply good, warning, and poor colors to Time, GW RSSI, and GW SNR data
       "createdRow": function(row, data, dataIndex) {
         var now = moment();
-        var anchorTime = moment($('td:eq(7)', row).text());
+        var anchorTime = moment($('td:eq(8)', row).text());
         var diffInMilliseconds = now.diff(anchorTime);
-        var batteryValue = $('td:eq(9)', row).text();
-        var rssi = $('td:eq(13)', row).text();
-        var snr = $('td:eq(14)', row).text();
+        var batteryValue = $('td:eq(10)', row).text();
+        var rssi = $('td:eq(14)', row).text();
+        var snr = $('td:eq(15)', row).text();
         if (batteryValue !== '') {
           if (batteryValue < 3) {
-            $('td:eq(9)', row).addClass('poor');
+            $('td:eq(10)', row).addClass('poor');
           } else if (batteryValue < 3.2) {
-            $('td:eq(9)', row).addClass('warning');
+            $('td:eq(10)', row).addClass('warning');
           }
         }
         if (anchorTime !== '') {
           if (diffInMilliseconds > 2 * 60 * 60 * 1000) {
-            $('td:eq(7)', row).addClass('poor');
+            $('td:eq(8)', row).addClass('poor');
           } else if (diffInMilliseconds > 1 * 60 * 60 * 1000) {
-            $('td:eq(7)', row).addClass('warning');
+            $('td:eq(8)', row).addClass('warning');
           }
         }
         if (rssi !== '') {
           rssi = parseFloat(rssi);
           if (rssi >= -105) {
-            $('td:eq(13)', row).addClass('good');
+            $('td:eq(14)', row).addClass('good');
           } else if (rssi > -116) {
-            $('td:eq(13)', row).addClass('warning');
+            $('td:eq(14)', row).addClass('warning');
           } else {
-            $('td:eq(13)', row).addClass('poor');
+            $('td:eq(14)', row).addClass('poor');
           }
         }
         if (snr !== '') {
           snr = parseFloat(snr);
           if (snr >= -5) {
-            $('td:eq(14)', row).addClass('good');
+            $('td:eq(15)', row).addClass('good');
           } else if (snr >= -15) {
-            $('td:eq(14)', row).addClass('warning');
+            $('td:eq(15)', row).addClass('warning');
           } else {
-            $('td:eq(14)', row).addClass('poor');
+            $('td:eq(15)', row).addClass('poor');
           }
         }
       }
