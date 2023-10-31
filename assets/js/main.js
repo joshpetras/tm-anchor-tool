@@ -212,7 +212,7 @@
               // var dateString = moment(date).startOf('second').fromNow(); // Use moment.js to format the date string
               return dateString;
             }
-            return (data) ? data : null;
+            return (data) ? data : '';
           }
         },
         {
