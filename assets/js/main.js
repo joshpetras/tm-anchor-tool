@@ -38,14 +38,14 @@
 
       // Update the DataTable's AJAX source with increased timeout
       table.ajax.url(apiEndpoint).load(null, false, {
-        timeout: 10000 // 10 seconds
+        timeout: 15000 // 15 seconds
       });
 
       // Save the selected endpoint to localStorage
       localStorage.setItem("selectedAnchorApiEndpoint", apiEndpoint);
 
       // Restart the interval after the data is loaded
-      intervalId = setInterval(reloadTableData, 10000);
+      intervalId = setInterval(reloadTableData, 15000);
     });
 
     // Get the current date and time when the query is initiated
@@ -76,7 +76,7 @@
         "url": apiEndpoint,
         "dataSrc": "anchors",
         "cache": false,
-        "timeout": 10000, // Set timeout to 10 seconds
+        "timeout": 15000, // Set timeout to 15 seconds
         "beforeSend": function() {
           // Update the page title before sending the request
           document.querySelector('h2').innerText = 'Anchor information from ' + apiEndpoint + ' - Connected since ' + dateString;
@@ -780,6 +780,6 @@
         table.draw();
     }
 
-    // Reload data every 10 seconds
-    var intervalId = setInterval(reloadTableData, 10000); // Keep a reference to the interval
+    // Reload data every 15 seconds
+    var intervalId = setInterval(reloadTableData, 15000); // Keep a reference to the interval
   });
