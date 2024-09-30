@@ -616,9 +616,9 @@
         }
         if (anchorTime !== '') {
           if (diffInMilliseconds > 2 * 60 * 60 * 1000) {
-            $('td:eq(8)', row).addClass('poor');
+            $('td:eq(9)', row).addClass('poor');
           } else if (diffInMilliseconds > 1 * 60 * 60 * 1000) {
-            $('td:eq(8)', row).addClass('warning');
+            $('td:eq(9)', row).addClass('warning');
           }
         }
         if (rssi !== '') {
