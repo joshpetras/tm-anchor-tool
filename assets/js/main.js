@@ -163,6 +163,12 @@
           }
         },
         {
+          "data": "geoInfo.dpoc",
+          "render": function(data, type, row) {
+            return (data) ? data : '';
+          }
+        },
+        {
           "data": null,
           "render": function(data, type, row) {
             // find gateway with highest rssi
@@ -226,7 +232,7 @@
             }
             return data;
           }
-        },
+        },/*
         {
           "data": "sensors.fall",
           "defaultContent": "", // Set a default value
@@ -242,7 +248,7 @@
               });
             }
           }
-        },
+        },*/
         {
           "data": "sensors.bat",
           "defaultContent": "", // Set a default value
@@ -462,12 +468,16 @@
           "targets": 4
         },
         {
-          "title": "Gateway with max RSSI",
+          "title": "DPO",
           "targets": 5
         },
         {
-          "title": "Connected Gateways",
+          "title": "Gateway with max RSSI",
           "targets": 6
+        },
+        {
+          "title": "Connected Gateways",
+          "targets": 7
         },
         /*{
           "title": "Token Count",
@@ -475,18 +485,18 @@
         },*/
         {
           "title": "Installed",
-          "targets": 7,
-          "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
-        },
-        {
-          "title": "Last Seen",
           "targets": 8,
           "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
         },
         {
+          "title": "Last Seen",
+          "targets": 9,
+          "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
+        },
+        /*{
           "title": "Fall Detected",
           "targets": 9
-        },
+        },*/
         {
           "title": "Battery",
           "targets": 10
@@ -592,7 +602,7 @@
       // Apply good, warning, and poor colors to Time, GW RSSI, and GW SNR data
       "createdRow": function(row, data, dataIndex) {
         var now = moment();
-        var anchorTime = moment($('td:eq(8)', row).text());
+        var anchorTime = moment($('td:eq(9)', row).text());
         var diffInMilliseconds = now.diff(anchorTime);
         var batteryValue = $('td:eq(10)', row).text();
         var rssi = $('td:eq(14)', row).text();
