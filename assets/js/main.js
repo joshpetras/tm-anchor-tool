@@ -571,8 +571,9 @@
           "targets": 19
         },
         {
-          "title": "Version date",
-          "targets": 20
+          "title": "Version Date",
+          "targets": 20,
+          "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
         },
         {
           "title": "Version",
