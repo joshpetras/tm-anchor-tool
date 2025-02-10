@@ -432,6 +432,26 @@
           "render": function(data, type, row) {
             return (data && data.typ) ? data.typ : '';
           }
+        },
+        {
+          "data": "sensors.a_ver.time",
+          "render": function(data, type, row) {
+            if (!data) return '';
+            if (type === 'display' || type === 'filter') {
+              var date = new Date(data * 1000); // Convert timestamp to Date object
+              var dateString = moment(date).format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to format the date string
+              // var dateString = moment(date).startOf('second').fromNow(); // Use moment.js to format the date string
+              return dateString;
+            }
+            return data;
+          }
+        },
+        {
+          "data": "sensors.a_ver.value",
+          "render": function(data, type, row) {
+            console.log(row.sensors.a_ver?.value);
+            return row.sensors.a_ver?.value || '';
+          }
         }
         /*,
                 {
@@ -549,6 +569,14 @@
         {
           "title": "Msg Typ",
           "targets": 19
+        },
+        {
+          "title": "Version date",
+          "targets": 20
+        },
+        {
+          "title": "Version",
+          "targets": 21
         }
         /*,
                 {
