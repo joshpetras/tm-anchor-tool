@@ -313,6 +313,38 @@
             }
           }
         },
+        {
+          "data": "sensors.prs",
+          "defaultContent": "", // Set a default value
+          "render": function(data, type, row) {
+            return (data && data.value) ? data.value : '';
+          },
+          "createdCell": function(cell, cellData, rowData) {
+            if (rowData.sensors.prs && rowData.sensors.prs.value && rowData.sensors.prs.time) {
+              var prsDate = new Date(rowData.sensors.prs.time * 1000); // Convert timestamp to Date object
+              var prsDateString = moment(prsDate).startOf('second').fromNow(); // Use moment.js to format the date string
+              tippy(cell, {
+                content: prsDateString,
+              });
+            }
+          }
+        },
+        {
+          "data": "sensors.voc",
+          "defaultContent": "", // Set a default value
+          "render": function(data, type, row) {
+            return (data && data.value) ? data.value : '';
+          },
+          "createdCell": function(cell, cellData, rowData) {
+            if (rowData.sensors.voc && rowData.sensors.voc.value && rowData.sensors.voc.time) {
+              var vocDate = new Date(rowData.sensors.voc.time * 1000); // Convert timestamp to Date object
+              var vocDateString = moment(vocDate).startOf('second').fromNow(); // Use moment.js to format the date string
+              tippy(cell, {
+                content: vocDateString,
+              });
+            }
+          }
+        },
         /*{
           "data": "sensors.prs",
           "render": function(data, type, row) {
@@ -548,59 +580,59 @@
           "title": "Humidity",
           "targets": 13
         },
-        /*{
+        {
           "title": "Pressure",
-          "targets": 8
+          "targets": 14
         },
         {
           "title": "VOC",
-          "targets": 9
+          "targets": 15
         },
-        {
+        /*{
           "title": "Altitude",
           "targets": 10
         }, */
         {
           "title": "GW RSSI",
-          "targets": 14
-        },
-        {
-          "title": "GW SNR",
-          "targets": 15
-        },
-        {
-          "title": "Frame Count",
           "targets": 16
         },
         {
-          "title": "Missed Frames",
+          "title": "GW SNR",
           "targets": 17
         },
         {
-          "title": "SF",
+          "title": "Frame Count",
           "targets": 18
         },
         {
-          "title": "Msg Typ",
+          "title": "Missed Frames",
           "targets": 19
         },
         {
-          "title": "SUM4 Version Date",
-          "targets": 20,
-          "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
+          "title": "SF",
+          "targets": 20
         },
         {
-          "title": "SUM4 Version",
+          "title": "Msg Typ",
           "targets": 21
         },
         {
-          "title": "ESP32 Version Date",
+          "title": "SUM4 Version Date",
           "targets": 22,
           "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
         },
         {
-          "title": "ESP32 Version",
+          "title": "SUM4 Version",
           "targets": 23
+        },
+        {
+          "title": "ESP32 Version Date",
+          "targets": 24,
+          "searchBuilderType": "moment-YYYY-MM-DD HH:mm:ss"
+        },
+        {
+          "title": "ESP32 Version",
+          "targets": 25
         }
         /*,
                 {
@@ -657,8 +689,8 @@
         var anchorTime = moment($('td:eq(9)', row).text());
         var diffInMilliseconds = now.diff(anchorTime);
         var batteryValue = $('td:eq(10)', row).text();
-        var rssi = $('td:eq(14)', row).text();
-        var snr = $('td:eq(15)', row).text();
+        var rssi = $('td:eq(16)', row).text();
+        var snr = $('td:eq(17)', row).text();
         if (batteryValue !== '') {
           if (batteryValue < 3) {
             $('td:eq(10)', row).addClass('poor');
@@ -676,21 +708,21 @@
         if (rssi !== '') {
           rssi = parseFloat(rssi);
           if (rssi >= -105) {
-            $('td:eq(14)', row).addClass('good');
+            $('td:eq(16)', row).addClass('good');
           } else if (rssi > -116) {
-            $('td:eq(14)', row).addClass('warning');
+            $('td:eq(16)', row).addClass('warning');
           } else {
-            $('td:eq(14)', row).addClass('poor');
+            $('td:eq(16)', row).addClass('poor');
           }
         }
         if (snr !== '') {
           snr = parseFloat(snr);
           if (snr >= -5) {
-            $('td:eq(15)', row).addClass('good');
+            $('td:eq(17)', row).addClass('good');
           } else if (snr >= -15) {
-            $('td:eq(15)', row).addClass('warning');
+            $('td:eq(17)', row).addClass('warning');
           } else {
-            $('td:eq(15)', row).addClass('poor');
+            $('td:eq(17)', row).addClass('poor');
           }
         }
       }
