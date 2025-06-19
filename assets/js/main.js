@@ -105,7 +105,7 @@
           "createdCell": function(cell, cellData, rowData) {
             // Check if longitude and latitude values exist
             if (rowData.geoInfo && rowData.geoInfo.longitude && rowData.geoInfo.latitude) {
-              var mapboxUrl = getMapboxUrl(rowData.geoInfo.latitude, rowData.geoInfo.longitude); // TM API has these reversed!
+              var mapboxUrl = getMapboxUrl(rowData.geoInfo.longitude, rowData.geoInfo.latitude); // TM API has these reversed!
 
               // Add a data attribute to the cell to store the Mapbox URL
               $(cell).attr('data-mapbox-url', mapboxUrl);
