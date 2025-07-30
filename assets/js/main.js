@@ -1,5 +1,31 @@
   var missedFramesData = {};
 
+  // Function to show error messages in a non-blocking way
+  function showErrorMessage(message) {
+    // Remove any existing error messages
+    $('.error-message').remove();
+    
+    // Create error message element
+    var errorDiv = $('<div class="error-message" style="position: fixed; top: 20px; right: 20px; background-color: #f44336; color: white; padding: 15px; border-radius: 5px; z-index: 1000; max-width: 400px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">' + message + '<button style="float: right; background: none; border: none; color: white; font-size: 18px; cursor: pointer; margin-left: 10px;">&times;</button></div>');
+    
+    // Add to page
+    $('body').append(errorDiv);
+    
+    // Auto-remove after 10 seconds
+    setTimeout(function() {
+      errorDiv.fadeOut(function() {
+        $(this).remove();
+      });
+    }, 10000);
+    
+    // Allow manual dismissal
+    errorDiv.find('button').on('click', function() {
+      errorDiv.fadeOut(function() {
+        $(this).remove();
+      });
+    });
+  }
+
   function reloadTableData() {
     // Force collapse of the dropdown
     document.getElementById("endpoint-selector").blur();
@@ -30,22 +56,35 @@
     // var apiEndpoint = "https://prd.tcs31.sostark.nl/api/anchors"; // Development server
     // var apiEndpoint = "https://demo.tcs.sostark.nl/api/anchors"; // Demo server
 
+    // Debounce function to prevent rapid endpoint changes
+    var endpointChangeTimeout;
     document.getElementById("endpoint-selector").addEventListener("change", function() {
-      clearInterval(intervalId); // Clear the interval when changing the API endpoint
+      // Clear any pending timeout
+      if (endpointChangeTimeout) {
+        clearTimeout(endpointChangeTimeout);
+      }
+      
+      // Clear the interval when changing the API endpoint
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
 
-      apiEndpoint = document.getElementById("endpoint-selector").value;
-      var table = $('#sensor-data').DataTable();
+      // Debounce the endpoint change
+      endpointChangeTimeout = setTimeout(function() {
+        apiEndpoint = document.getElementById("endpoint-selector").value;
+        var table = $('#sensor-data').DataTable();
 
-      // Update the DataTable's AJAX source with increased timeout
-      table.ajax.url(apiEndpoint).load(null, false, {
-        timeout: 30000 // 30 seconds
-      });
+        // Update the DataTable's AJAX source with increased timeout
+        table.ajax.url(apiEndpoint).load(null, false, {
+          timeout: 30000 // 30 seconds
+        });
 
-      // Save the selected endpoint to localStorage
-      localStorage.setItem("selectedAnchorApiEndpoint", apiEndpoint);
+        // Save the selected endpoint to localStorage
+        localStorage.setItem("selectedAnchorApiEndpoint", apiEndpoint);
 
-      // Restart the interval after the data is loaded
-      intervalId = setInterval(reloadTableData, 30000);
+        // Restart the interval after the data is loaded
+        intervalId = setInterval(reloadTableData, 30000);
+      }, 300); // 300ms debounce delay
     });
 
     // Get the current date and time when the query is initiated
@@ -82,16 +121,52 @@
           document.querySelector('h2').innerText = 'Anchor information from ' + apiEndpoint + ' - Connected since ' + dateString;
         },
         "error": function(xhr, error, thrown) {
-          // Provide a custom error message or behavior
-          if (xhr.status === 500) {
-            // Show a custom error message for server error
-            alert('An error occurred while retrieving the data. The server may be experiencing issues. Please try again later.');
-          } else {
-            // Show a generic error message for other errors
-            alert('An error occurred while retrieving the data. Please check your internet connection and try again.');
+          // Provide specific error messages based on status codes
+          var errorMessage = '';
+          var shouldRetry = false;
+          
+          switch(xhr.status) {
+            case 0:
+              errorMessage = 'Network error: Unable to connect to the server. Please check your internet connection.';
+              shouldRetry = true;
+              break;
+            case 401:
+              errorMessage = 'Authentication error: You are not authorized to access this data.';
+              break;
+            case 403:
+              errorMessage = 'Access denied: You do not have permission to access this resource.';
+              break;
+            case 404:
+              errorMessage = 'API endpoint not found. Please check the server configuration.';
+              break;
+            case 500:
+              errorMessage = 'Server error: The server is experiencing issues. Please try again later.';
+              shouldRetry = true;
+              break;
+            case 502:
+            case 503:
+            case 504:
+              errorMessage = 'Service temporarily unavailable. Please try again in a few minutes.';
+              shouldRetry = true;
+              break;
+            default:
+              errorMessage = 'An unexpected error occurred. Status: ' + xhr.status + '. Please try again.';
+              shouldRetry = true;
           }
+          
+          // Show error message in a non-blocking way
+          showErrorMessage(errorMessage);
+          
           // Clear the loading message from the DataTable
           $('#sensor-data').DataTable().clear().draw();
+          
+          // Retry logic for recoverable errors
+          if (shouldRetry) {
+            setTimeout(function() {
+              console.log('Retrying API request...');
+              $('#sensor-data').DataTable().ajax.reload();
+            }, 5000); // Retry after 5 seconds
+          }
         }
       },
       "columns": [{
@@ -110,9 +185,12 @@
               // Add a data attribute to the cell to store the Mapbox URL
               $(cell).attr('data-mapbox-url', mapboxUrl);
 
-              // Initialize Tippy.js tooltip
+              // Initialize Tippy.js tooltip with sanitized content
+              var sanitizedMapboxUrl = encodeURIComponent(mapboxUrl);
+              var tooltipContent = '<div style="width: 100%;"><img data-src="' + sanitizedMapboxUrl + '" alt="Map" style="width: 100%; height: auto;" /></div>';
+              
               tippy(cell, {
-                content: '<div style="width: 100%;"><img data-src="' + mapboxUrl + '" alt="Map" style="width: 100%; height: auto;" /></div>',
+                content: tooltipContent,
                 maxWidth: '90vw',
                 allowHTML: true,
                 trigger: 'click',
@@ -122,12 +200,16 @@
                 onShow(instance) {
                   // Set the image src when the tooltip is shown
                   var img = instance.popper.querySelector('img');
-                  img.src = img.dataset.src;
+                  if (img && img.dataset.src) {
+                    img.src = decodeURIComponent(img.dataset.src);
+                  }
                 },
                 onHidden(instance) {
                   // Clear the image src when the tooltip is hidden
                   var img = instance.popper.querySelector('img');
-                  img.src = '';
+                  if (img) {
+                    img.src = '';
+                  }
                 }
               });
             }
@@ -213,10 +295,34 @@
           "data": "geoInfo.time",
           "render": function(data, type, row) {
             if (data && type === 'display' || type === 'filter') {
-              var date = new Date(data * 1000); // Convert timestamp to Date object
-              var dateString = moment(date).format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to format the date string
-              // var dateString = moment(date).startOf('second').fromNow(); // Use moment.js to format the date string
-              return dateString;
+              try {
+                // Validate timestamp format and convert appropriately
+                var timestamp = parseInt(data);
+                if (isNaN(timestamp)) {
+                  return 'Invalid timestamp';
+                }
+                
+                // Determine if timestamp is in seconds or milliseconds
+                var date;
+                if (timestamp < 10000000000) {
+                  // Timestamp is in seconds
+                  date = new Date(timestamp * 1000);
+                } else {
+                  // Timestamp is in milliseconds
+                  date = new Date(timestamp);
+                }
+                
+                // Validate the resulting date
+                if (isNaN(date.getTime())) {
+                  return 'Invalid date';
+                }
+                
+                var dateString = moment(date).format('YYYY-MM-DD HH:mm:ss');
+                return dateString;
+              } catch (error) {
+                console.error('Error processing timestamp:', error);
+                return 'Error processing date';
+              }
             }
             return (data) ? data : '';
           }
@@ -225,10 +331,34 @@
           "data": "time",
           "render": function(data, type, row) {
             if (type === 'display' || type === 'filter') {
-              var date = new Date(data * 1000); // Convert timestamp to Date object
-              var dateString = moment(date).format('YYYY-MM-DD HH:mm:ss'); // Use moment.js to format the date string
-              // var dateString = moment(date).startOf('second').fromNow(); // Use moment.js to format the date string
-              return dateString;
+              try {
+                // Validate timestamp format and convert appropriately
+                var timestamp = parseInt(data);
+                if (isNaN(timestamp)) {
+                  return 'Invalid timestamp';
+                }
+                
+                // Determine if timestamp is in seconds or milliseconds
+                var date;
+                if (timestamp < 10000000000) {
+                  // Timestamp is in seconds
+                  date = new Date(timestamp * 1000);
+                } else {
+                  // Timestamp is in milliseconds
+                  date = new Date(timestamp);
+                }
+                
+                // Validate the resulting date
+                if (isNaN(date.getTime())) {
+                  return 'Invalid date';
+                }
+                
+                var dateString = moment(date).format('YYYY-MM-DD HH:mm:ss');
+                return dateString;
+              } catch (error) {
+                console.error('Error processing timestamp:', error);
+                return 'Error processing date';
+              }
             }
             return data;
           }
@@ -874,6 +1004,13 @@
         table.draw();
     }
 
-    // Reload data every 20 seconds
-    var intervalId = setInterval(reloadTableData, 30000); // Keep a reference to the interval
+      // Reload data every 30 seconds
+  var intervalId = setInterval(reloadTableData, 30000); // Keep a reference to the interval
+  
+  // Clean up interval when page is unloaded
+  window.addEventListener('beforeunload', function() {
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
   });
+});

@@ -52,6 +52,41 @@
         transform: rotate(360deg);
       }
     }
+    
+    /* Error message styling */
+    .error-message {
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    /* Responsive design improvements */
+    @media (max-width: 768px) {
+      #jp-heading {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      #endpoint-selector {
+        width: 100%;
+        max-width: 300px;
+      }
+      
+      .error-message {
+        max-width: 90vw !important;
+        right: 5px !important;
+        left: 5px !important;
+      }
+    }
   </style>
 </head>
 
